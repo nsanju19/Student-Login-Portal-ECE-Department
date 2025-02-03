@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Management System - Student Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .title {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+
+        .divider {
+            width: 100%;
+            height: 4px;
+            background-color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        .ribbon {
+            background: linear-gradient(45deg, #007bff, #ff6347, #ffca28, #6a0dad);
+            color: white;
+            font-size: 1rem;
+            padding: 5px;
+            width: 100%;
+            text-align: center;
+            overflow: hidden;
+            white-space: nowrap;
+            animation: move 8s linear infinite;
+        }
+
+        @keyframes move {
+            from {
+                transform: translateX(100%);
+            }
+
+            to {
+                transform: translateX(-100%);
+            }
+        }
+
+        .login-card {
+            max-width: 400px;
+            margin: 20px auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .navbar {
+            margin-bottom: 20px;
+        }
+
+        .navbar-nav .nav-link {
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #343a40;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f2f2f2;
+        }
+
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #eaf7ff;
+        }
+
+        .table thead th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .bg-gradient {
+            background: linear-gradient(45deg, #007bff, #ff6347);
+            color: white;
+        }
+
+        .highlight {
+            background-color: #ffeeba !important;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ribbon">Welcome to the ECE Student Login Portal</div>
+
+    <div class="title">Holy Mary Institute of Technology and Science</div>
+    <div class="divider"></div>
+    <div class="subtitle" style="text-align: center; font-size: 1.5rem; font-weight: bold;">ECE Student Login</div>
+
+    <!-- Student Login Card -->
+    <div class="container login-card" id="loginCard">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3>Student Login</h3>
+            </div>
+            <div class="card-body">
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <label for="rollNumber" class="form-label">Roll Number</label>
+                        <input type="text" id="rollNumber" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content with Navbar (hidden initially) -->
+    <div class="container mt-4" id="studentPortal" style="display: none;">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Student Portal</a>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="#" data-section="info">Student Information</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-section="marks">Marks List</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-section="attendance">Attendance</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-section="achievements">Achievements</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-section="courses">Courses</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" id="logout">Logout</a></li>
+            </ul>
+        </nav>
+
+        <div class="content mt-4">
+            <!-- Student Information -->
+            <div id="info" class="content-section active"></div>
+
+            <!-- Marks List -->
+            <div id="marks" class="content-section"></div>
+
+            <!-- Attendance -->
+            <div id="attendance" class="content-section"></div>
+
+            <!-- Achievements -->
+            <div id="achievements" class="content-section"></div>
+
+            <!-- Courses -->
+            <div id="courses" class="content-section"></div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="footer">
+        &copy; 2024 Holy Mary Institute of Technology and Science | Designed for ECE Department
+    </div>
+
+    <script>
+        const students = {
+            "22C91A0432": {
+                password: "pass123",
+                info: `
+                    <ul>
+                        <li><strong>Name:</strong> K. Purushotham</li>
+                        <li><strong>Father Name:</strong> K. Satyanna</li>
+                        <li><strong>Mother Name:</strong> K. Manikyamma</li>
+                        <li><strong>DOB:</strong> 30-12-2004</li>
+                        <li><strong>Location:</strong> Chinna Tandrapadu, Gadwal</li>
+                        <li><strong>Aspiration:</strong> Software Engineer</li>
+                    </ul>`,
+                marks: `
+                    <table class="table table-striped">
+                        <thead><tr><th>Semester</th><th>Subjects</th><th>Grade</th></tr></thead>
+                        <tbody>
+                            <tr><td>1-1</td><td>Physics, Maths, English, PPS</td><td>CGPA: 7.4</td></tr>
+                            <tr><td>1-2</td><td>EDC, Chemistry, Graphics, Maths, BEE</td><td>CGPA: 9.0</td></tr>
+                            <tr><td>2-1</td><td>EMTL, ECA, SS, EMTL, DLD</td><td>CGPA: 8.4</td></tr>
+                        </tbody>
+                    </table>`,
+                attendance: `
+                    <p><strong>August Attendance:</strong> 75%</p>`,
+                achievements: `
+                    <ul>
+                        <li>Enrolled in VLSI Course.</li>
+                        <li>Engaged in Internship Opportunities.</li>
+                    </ul>`,
+                courses: `
+                    <ul>
+                        <li>Control Systems</li>
+                        <li>Microprocessors & Microcontrollers</li>
+                        <li>Digital Integrated Circuit Analysis</li>
+                    </ul>`
+            },
+            "22C91A0458": {
+                password: "pass456",
+                info: `
+                    <ul>
+                        <li><strong>Name:</strong> N. Sanju</li>
+                        <li><strong>Father Name:</strong> N. Raju</li>
+                        <li><strong>Mother Name:</strong> N. Latha</li>
+                        <li><strong>DOB:</strong> 19-11-2004</li>
+                        <li><strong>Location:</strong> Gadwal</li>
+                        <li><strong>Aspiration:</strong> Engineer</li>
+                    </ul>`,
+                marks: `
+                    <table class="table table-striped">
+                        <thead><tr><th>Semester</th><th>Subjects</th><th>Grade</th></tr></thead>
+                        <tbody>
+                            <tr><td>1-1</td><td>Physics, Maths, English, PPS</td><td>CGPA: 7.4</td></tr>
+                            <tr><td>1-2</td><td>EDC, Chemistry, Graphics, Maths, BEE</td><td>CGPA: 9.0</td></tr>
+                            <tr><td>2-1</td><td>EMTL, ECA, SS, EMTL, DLD</td><td>CGPA: 8.4</td></tr>
+                        </tbody>
+                    </table>`,
+                attendance: `
+                    <p><strong>August Attendance:</strong> 75%</p>`,
+                achievements: `
+                    <ul>
+                        <li>Part of Robotics Workshop</li>
+                    </ul>`,
+                courses: `
+                    <ul>
+                        <li>Digital Communications</li>
+                        <li>Business Economics</li>
+                    </ul>`
+            }
+        };
+
+        document.getElementById("loginForm").addEventListener("submit", function (event) {
+            const rollNumber = document.getElementById("rollNumber").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            if (students[rollNumber] && students[rollNumber].password === password) {
+                showPortal(rollNumber);
+            } else {
+                alert("Invalid roll number or password.");
+            }
+
+            event.preventDefault();
+        });
+
+        function showPortal(rollNumber) {
+            document.getElementById("loginCard").style.display = "none";
+            document.getElementById("studentPortal").style.display = "block";
+
+            // Populate student-specific data
+            document.getElementById("info").innerHTML = `<h4>Student Information</h4>${students[rollNumber].info}`;
+            document.getElementById("marks").innerHTML = `<h4>Marks List</h4>${students[rollNumber].marks}`;
+            document.getElementById("attendance").innerHTML = `<h4>Attendance</h4>${students[rollNumber].attendance}`;
+            document.getElementById("achievements").innerHTML = `<h4>Achievements</h4>${students[rollNumber].achievements}`;
+            document.getElementById("courses").innerHTML = `<h4>Courses</h4>${students[rollNumber].courses}`;
+        }
+
+        // Logout functionality
+        document.getElementById("logout").addEventListener("click", function () {
+            document.getElementById("loginCard").style.display = "block";
+            document.getElementById("studentPortal").style.display = "none";
+        });
+
+        // Navbar navigation
+        const navLinks = document.querySelectorAll(".nav-link");
+        navLinks.forEach(link => {
+            link.addEventListener("click", function (event) {
+                event.preventDefault();
+                const section = this.getAttribute("data-section");
+
+                // Hide all sections and show the selected one
+                document.querySelectorAll(".content-section").forEach(sec => {
+                    sec.classList.remove("active");
+                });
+                document.getElementById(section).classList.add("active");
+            });
+        });
+    </script>
+</body>
+
+</html>
